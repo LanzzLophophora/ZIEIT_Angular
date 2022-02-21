@@ -9,7 +9,15 @@ export class PostFormComponent implements OnInit {
   title=''
   text = ''
   styleToggle=false
+  titleSearching = ''
+  filteringByTitle = false
+  filteringByText = false
+
   @Output() addPostUser: EventEmitter<Post> = new EventEmitter<Post>()
+  @Output() titleSearch = new EventEmitter<string>()
+  @Output() filterByTitle = new EventEmitter<boolean>()
+  @Output() filterByText = new EventEmitter<boolean>()
+
   constructor() { }
 
   @ViewChild('myInputText',{static: false}) myinputText: ElementRef
@@ -18,9 +26,16 @@ export class PostFormComponent implements OnInit {
   ngOnInit() {
   }
 
+
+
+  onChangeSearch(change: string) {
+    this.titleSearch.emit(change)
+  }
+
+
   addPost() {
     if(this.text.trim() && this.title.trim()) {
-      const post : Post ={
+      const post: Post ={
         title: this.title,
         text: this.text
       }
@@ -31,18 +46,27 @@ export class PostFormComponent implements OnInit {
     }
   }
 
+  onFilterByTitle () {
+    console.log( '%c onFilterByTitle', 'color:red',  );
+    this.filterByTitle.emit(true);
+    this.filterByText.emit(false);
+  }
+
+  onFilterByText () {
+    this.filterByText.emit(true);
+    this.filterByTitle.emit(false);
+  }
+
   onLoadDefault () {
+    console.log( '',  );
     this.styleToggle=!this.styleToggle
     if(this.styleToggle) {
       this.myinputText.nativeElement.style.color = "red"
       this.myinputTitle.nativeElement.style.fontWeight = "bold"
-        } else {
+    } else {
       this.myinputText.nativeElement.style.color = 'black'
       this.myinputTitle.nativeElement.style.fontWeight = "normal"
-  
     }
   }
-  
-  
 }
 

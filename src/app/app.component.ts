@@ -20,6 +20,24 @@ export class AppComponent {
     {title:"Node.js", text: "Node.js® — це JavaScript–оточення побудоване на JavaScript–рушієві Chrome V8.", id: 4}
   ]
   
+  titleS=''
+  filteringByText = false
+  filteringByTitle = true
+
+
+  onFilterByTitle (event:boolean) {
+    console.log( '%c onFilterByTitle', 'color:green', event );
+    this.filteringByTitle = event;
+    // this.filteringByText = !event;
+  }
+
+  onFilterByText (event:boolean) {
+    console.log( '%c onFilterByText', 'color:blue', event );
+
+    this.filteringByText = event;
+    // this.filteringByTitle = !event;
+  }
+  
   updatePosts (event: Post){
     this.posts = [{...event, id: 1}, ...this.posts.map((p, i) => ({...p, id: i + 2}))];
   }
@@ -27,5 +45,9 @@ export class AppComponent {
   removeIdPost( id:number ) {
     this.posts = this.posts.filter((item)=>item.id!=id)
   }
+  onChangeSearch(event:string) {
+    this.titleS=event
+  }
+
     
 }
