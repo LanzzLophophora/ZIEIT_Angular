@@ -26,8 +26,6 @@ export class PostFormComponent implements OnInit {
   ngOnInit() {
   }
 
-
-
   onChangeSearch(change: string) {
     this.titleSearch.emit(change)
   }
@@ -47,7 +45,6 @@ export class PostFormComponent implements OnInit {
   }
 
   onFilterByTitle () {
-    console.log( '%c onFilterByTitle', 'color:red',  );
     this.filterByTitle.emit(true);
     this.filterByText.emit(false);
   }
@@ -58,7 +55,6 @@ export class PostFormComponent implements OnInit {
   }
 
   onLoadDefault () {
-    console.log( '',  );
     this.styleToggle=!this.styleToggle
     if(this.styleToggle) {
       this.myinputText.nativeElement.style.color = "red"

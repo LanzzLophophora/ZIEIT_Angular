@@ -9,7 +9,6 @@ export class FilterPipe implements PipeTransform {
   transform(posts: Post[], args: Array<any>): Post[] {
 
     const [titleSearch, filteringByTitle, filteringByText] = args;
-    console.log( '%c transform', 'color:red', titleSearch, filteringByTitle, filteringByText );
     if(!titleSearch.trim()) {
       return posts
     } else {
