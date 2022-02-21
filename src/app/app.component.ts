@@ -20,4 +20,12 @@ export class AppComponent {
     {title:"Node.js", text: "Node.js® — це JavaScript–оточення побудоване на JavaScript–рушієві Chrome V8.", id: 4}
   ]
   
+  updatePosts (event: Post){
+    this.posts = [{...event, id: 1}, ...this.posts.map((p, i) => ({...p, id: i + 2}))];
+  }
+
+  removeIdPost( id:number ) {
+    this.posts = this.posts.filter((item)=>item.id!=id)
+  }
+    
 }
