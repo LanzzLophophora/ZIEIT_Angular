@@ -1,6 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MyValidator } from './my.validator';
+import {Component, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {delay} from "rxjs/operators";
+
+export interface Todo {
+  id?: number;
+  title: string;
+  completed: boolean;
+}
 
 @Component({
   selector: 'app-root',
@@ -8,48 +14,60 @@ import { MyValidator } from './my.validator';
   styleUrls: ['./app.component.scss']
 })
 
-export class AppComponent implements OnInit{
-  form: FormGroup
-   ngOnInit() {
-    this.form = new FormGroup({
-      email: new FormControl('', [Validators.email, Validators.required, MyValidator.restrictedEmails]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(10)]),
-      address: new FormGroup({
-        country: new FormControl('ua'),
-        city: new FormControl('Запорожье', [Validators.required, Validators.minLength(3)])
-      }),
-      skills: new FormArray([])
-    }) 
+export class AppComponent implements OnInit {
+  namePost = ''
+  posts: Todo[] = [];
+  flagLoad = false;
+
+  constructor(private http: HttpClient) {
+  }
+
+  ngOnInit(): void {
+    this.loadPost()
+  }
+
+  addPost() {
+    if (!this.namePost.trim()) {
+      return
+    }
+    const post: Todo = {
+      title: this.namePost,
+      completed: false
+    }
+    this.http.post('https://jsonplaceholder.typicode.com/todos/', post)
+      .pipe(delay(1000))
+      .subscribe(res => {
+        console.log(res)
+        this.posts.unshift(post)
+      });
+
+  }
+
+  loadPost() {
+    this.flagLoad = true;
+    this.http.get<Todo[]>('https://jsonplaceholder.typicode.com/todos?_limit=5')
+      .pipe(delay(1500))
+      .subscribe(response => {
+        console.log(response)
+        this.posts = response;
+        this.flagLoad = false;
+    });
+  }
+
+  removePost(id: number) {
+    this.http.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+      .subscribe(() => {
+        console.log(id)
+        this.posts = this.posts.filter(item => item.id != id)
+        console.log(this.posts)
+      });
    }
- 
-   get skills () {
-    return (this.form.get('skills') as FormArray).controls
-  }
 
-   submit() {
-     const formControl = {...this.form.value}
-     console.log(formControl)
-     this.form.reset()
-   }
-
-   setCapital() {
-    const mapCity = {
-      ua: "Киев",
-      pl: "Варшава",
-      de: "Берлин"
-    } as const;
-    const countryCode = this.form.get('address')?.value.country;
-    console.log( 'countryCode', countryCode );
-    this.form.get('address')?.patchValue({city: mapCity[countryCode as keyof typeof mapCity]});
+   copmletedPost(id: number) {
+    return this.http.put(`https://jsonplaceholder.typicode.com/todos/${id}`,{completed:true})
+    .subscribe((res) => {
+      this.posts.find(item=> item.id===(res as {id: number}).id).completed=true
+    })  
   }
-
-  addSkill() {
-    const control = new FormControl('', Validators.required);
-    (<FormArray>this.form.get('skills')).push(control);
-  }
-
-  removeSkill(index: number) {
-    (<FormArray>this.form.get('skills')).removeAt(index)
-  }
+   
 }
- 
