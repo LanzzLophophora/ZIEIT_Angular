@@ -1,26 +1,25 @@
-<div class="container">
-  <h1>Angular HttpClient</h1>
-  <div class="card">
-    <div class="form-control">
-      <input type="text" placeholder="Название" [(ngModel)]="namePost">
-    </div>
-    <button class="btn" (click)="addPost()">Добавить</button>
-    <button class="btn" (click)="loadPost()">Загрузить</button>
-  </div>
-  <hr>
-  <div *ngIf="!flagLoad; else loading">
-    <div class="card" *ngFor="let post of posts">
-      <p>
-        <span [class.completed]="post.completed">{{post.title | titlecase}}</span>
-        <span>
-        <button class="btn btn-danger" (click)="removePost(post.id)">Удалить</button>
-        <button class="btn" [disabled]="post.completed" (click)="copmletedPost(post.id)">Завершить</button>
-     </span>
-      </p>
-    </div>
+<nav class="navbar">
+  <h1>
+    <a [routerLink]="['/']">Angular Routing</a>
+  </h1>
+  <ul>
+    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" >
+      <a [routerLink]="['/']" >Home</a>
+    </li>
+    <li routerLinkActive="active"><a routerLink="/posts">Posts</a></li>
+    <li routerLinkActive="active"><a routerLink="/about">About</a></li>
+    <li><button class="btn" >Login</button></li>
+    <li><button class="btn" >Logout</button></li>
+  </ul>
+</nav>
 
+
+<div class="container">
+  <div class="card">
+    <app-home></app-home>
+    <router-outlet></router-outlet>
   </div>
-  <ng-template #loading>
-    <p>Loading...</p>
-  </ng-template>
 </div>
+
+
+
